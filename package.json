@@ -11,10 +11,19 @@
     "@chakra-ui/theme-tools": "^2.0.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.9.0",
+    "@prismicio/client": "^6.7.3",
+    "@types/prismic-dom": "^2.1.1",
+    "@types/swiper": "^6.0.0",
     "framer-motion": "^6.3.0",
     "next": "latest",
+    "nextjs-progressbar": "^0.0.16",
+    "prismic": "^0.0.1",
+    "prismic-dom": "^2.2.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "sass": "^1.58.3",
+    "swiper": "^9.0.5"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

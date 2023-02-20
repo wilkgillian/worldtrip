@@ -1,56 +1,79 @@
-import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  List,
-  ListIcon,
-  ListItem,
-} from '@chakra-ui/react'
-import { CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
+import { Flex, Heading } from '@chakra-ui/react';
+import { GetStaticProps } from 'next';
+import { RichText } from 'prismic-dom';
+import Head from 'next/head';
+import Banner from '../components/Banner';
+import Caracteristicas from '../components/Caracteristicas';
+import Header from '../components/Header';
+import Separador from '../components/Separador';
+import Slider from '../components/Slider';
+import { getPrismicClient } from '../services/prismic';
 
-import { Hero } from '../components/Hero'
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { DarkModeSwitch } from '../components/DarkModeSwitch'
-import { CTA } from '../components/CTA'
-import { Footer } from '../components/Footer'
+interface HomeProps {
+  continents: {
+    slug: string;
+    title: string;
+    summary: string;
+    image: string;
+  }[];
+}
 
-const Index = () => (
-  <Container height="100vh">
-    <Hero />
-    <Main>
-      <Text color="text">
-        Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{' '}
-        <Code>TypeScript</Code>.
-      </Text>
+export default function Home({ continents }: HomeProps) {
+  return (
+    <Flex direction="column">
+      <Head>
+        <title>WorldTrip - Home</title>
+        <meta property="og:image" content="/ogimage.png" />
+        <meta property="og:image:secure_url" content="/ogimage.png" />
+        <meta name="twitter:image" content="/ogimage.png" />
+        <meta name="twitter:image:src" content="/ogimage.png" />
+        <meta property="og:title" content="WorldTrip" />
+        <meta name="twitter:title" content="WorldTrip" />
+      </Head>
 
-      <List spacing={3} my={0} color="text">
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink
-            isExternal
-            href="https://chakra-ui.com"
-            flexGrow={1}
-            mr={2}
-          >
-            Chakra UI <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-        <ListItem>
-          <ListIcon as={CheckCircleIcon} color="green.500" />
-          <ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-            Next.js <LinkIcon />
-          </ChakraLink>
-        </ListItem>
-      </List>
-    </Main>
+      <Header />
+      <Banner />
+      <Caracteristicas />
+      <Separador />
 
-    <DarkModeSwitch />
-    <Footer>
-      <Text>Next ❤️ Chakra</Text>
-    </Footer>
-    <CTA />
-  </Container>
-)
+      <Heading
+        textAlign="center"
+        fontWeight="500"
+        mb={['5', '14']}
+        fontSize={['lg', '3xl', '4xl']}
+      >
+        Vamos nessa?
+        <br />
+        Então escolha seu continente
+      </Heading>
 
-export default Index
+      <Slider continents={continents} />
+    </Flex>
+  );
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient();
+
+  const response = await prismic.getAllByType('continent', {
+    orderings: {
+      field: 'document.first_publication_date',
+      direction: 'desc'
+    },
+    lang: 'pt-br'
+  });
+
+  const continents = response.map(continent => ({
+    slug: continent.uid,
+    title: RichText.asText(continent.data.title),
+    summary: RichText.asText(continent.data.summary),
+    image: continent.data.slider_image.url,
+    id: continent.id
+  }));
+
+  return {
+    props: {
+      continents
+    }
+  };
+};
