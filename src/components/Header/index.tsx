@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Icon, Image } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, Icon, Image } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import Link from 'next/link';
@@ -37,13 +37,15 @@ export default function Header() {
             />
           </Link>
         )}
-        <Image
-          w={['81px', '184px']}
-          src="/logo.svg"
-          alt="Um avição voando sobre o nome da marca world trip"
-          justifySelf="center"
-          gridColumn="2"
-        />
+        <Box justifySelf="center" gridColumn="2">
+          <Link passHref href="/">
+            <Image
+              w={['81px', '184px']}
+              src="/logo.svg"
+              alt="Um avição voando sobre o nome da marca world trip"
+            />
+          </Link>
+        </Box>
       </Grid>
     </Flex>
   );
